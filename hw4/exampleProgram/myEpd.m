@@ -26,16 +26,32 @@ wave=au.signal; fs=au.fs;
 frameSize=epdOpt.frameSize; overlap=epdOpt.overlap;
 wave=double(wave);				% convert to double data type (轉成資料型態是 double 的變數)
 wave=wave-mean(wave);				% zero-mean substraction (零點校正)
+%wave=wave-median(wave);
 frameMat=enframe(wave, frameSize, overlap);	% frame blocking (切出音框)
 frameNum=size(frameMat, 2);			% no. of frames (音框的個數)
 volume=frame2volume(frameMat);			% compute volume (計算音量)
-volumeTh=max(volume)*epdOpt.volumeRatio;	% compute volume threshold (計算音量門檻值)
-index=find(volume>=volumeTh);			% find frames with volume larger than the threshold (找出超過音量門檻值的音框)
-epInFrameIndex=[index(1), index(end)];
-epInSampleIndex=frame2sampleIndex(epInFrameIndex, frameSize, overlap);	% conversion from frame index to sample index (由 frame index 轉成 sample index)
+%volumeTh=max(volume)*epdOpt.volumeRatio;	% compute volume threshold (計算音量門檻值)
+
+
+
+% method 1
+% low = prctile(volume, 3);
+% high = prctile(volume, 97);
+% volumeTh = low + (high - low) * epdOpt.volumeRatio;
+
+% method 2
+% volumeTh = min(volume)*epdOpt.volumeRatio;
+
+% method 3
+% volumeTh = median(volume)*epdOpt.volumeRatio;
+
+% index=find(volume>=volumeTh);			% find frames with volume larger than the threshold (找出超過音量門檻值的音框)
+% epInFrameIndex=[index(1), index(end)];
+% epInSampleIndex=frame2sampleIndex(epInFrameIndex, frameSize, overlap);	% conversion from frame index to sample index (由 frame index 轉成 sample index)
 
 %addition
-[epInSampleIndex, epInFrameIndex, soundSegment, zeroOneVec, others] = endPointDetect(au, epdOpt, showPlot);
+%[epInSampleIndex, epInFrameIndex, soundSegment, zeroOneVec, others] = endPointDetect(au, epdOpt, showPlot);
+[epInSampleIndex, epInFrameIndex, soundSegment, zeroOneVec, others] = epdByVolZcr(au, epdOpt, showPlot);
 
 
 if showPlot,

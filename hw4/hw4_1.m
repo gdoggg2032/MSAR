@@ -25,8 +25,9 @@ end
 
 volume = 100/max(volume) * volume; % normalize
 
-low = prctile(volume, 3);
-high = prctile(volume, 97);
+[sortedVol, sortingIndices] = sort(volume, 'descend');
+low = sortedVol(floor(frameNum/100 * 97));
+high = sortedVol(ceil(frameNum/100 * 3));
 
 maxCount = 0;
 
@@ -105,9 +106,9 @@ for i = 1 : frameNum
     
 end
 volume = 100/max(volume) * volume;
-
-low = prctile(volume, 3);
-high = prctile(volume, 97);
+[sortedVol, sortingIndices] = sort(volume, 'descend');
+low = sortedVol(floor(frameNum/100 * 97));
+high = sortedVol(ceil(frameNum/100 * 3));
 
 maxCount = 0;
 

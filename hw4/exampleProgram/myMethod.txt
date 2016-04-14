@@ -2,10 +2,59 @@ Please describe your findings along the following directions.
 
 The recognition rate of my program. (我得到的辨識率)
 
+使用2012-MSAR的dataset， recogRate = 83.06%
+
 My method (我的方法)
+
+1.
+使用endPointDetect.m：
+method = 'vol'
+在frameSize = 256、overlap = 64時
+recogRate最高為 77.02%
+
+2.
+使用endPointDetect.m：
+method = 'volHod'
+在frameSize = 256、overlap = 64時
+recogRate最高為65.97%
+
+3. 
+使用epdByVolZcr.m：
+epdOpt.frameSize = 256;
+epdOpt.overlap = 64;
+epdOpt.minSegment = 0.0789474;
+epdOpt.maxSilBetweenSegment = 0.4160; 
+epdOpt.vMinMaxPercentile = 3;
+epdOpt.volRatio = 0.0789474; 
+epdOpt.volRatio2 = 0.2; 
+epdOpt.zcrShiftGain = 4; 
+epdOpt.zcrRatio = 0.184211; 
+
 
 My optimization strategy (我所採用的優化策略)
 
+先從ratio開始調起
+volRatio及zcrRatio各產生linspace
+形成2維的陣列，再用goPrmTune跑所有的可能
+選擇之中最好的。
+
+這裡使用了overlap > 0的feature，
+overlap在EPD中有很大的影響。
+而frameSize太小會影響到運算的時間。
+例如在method 1中：
+overlap = 0的情況，recogRate最高為77.02%
+而overlap = 64的情況，recogRate最高為79.47%
+
 Error analysis (錯誤分析)
 
+在speaker='100062595'的情況，EPD的結果範圍都太大，
+推測是因為雜音較大，所以將雜音辨認成speech了。
+
+
 Potential direction for further improvement (未來可能改進的方向)
+
+可以試看看機器學習的方法，例如對每個frame作辨認的DNN，
+或者看連續frame的RNN。
+
+
+

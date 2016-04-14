@@ -6,7 +6,7 @@ addpath /Applications/MATLAB_R2015b.app/toolbox/sap
 
 % ====== Define the directory of the wave files to be tested
 auDir='waveFile';
-%auDir='../2012-MSAR';
+auDir='../2012-MSAR';
 %auDir='D:\users\jang\temp\epdTrain';
 
 % ====== Read wave files and the corresponding EPD information
